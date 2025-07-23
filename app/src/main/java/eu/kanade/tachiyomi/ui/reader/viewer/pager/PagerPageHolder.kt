@@ -249,15 +249,14 @@ class PagerPageHolder(
 
     /**
      * Check if current page can be combined with the next page for dual-page display.
-     * Returns true if both pages are narrow (not wide) and next page exists.
      */
     private suspend fun canCombineWithNext(): Boolean {
         val currentPageIndex = viewer.adapter.items.indexOf(page)
         
         val nextPageIndex = if (viewer is R2LPagerViewer) {
-            currentPageIndex - 1  // In R2L, the "next" page in reading order is at index - 1
+            currentPageIndex - 1
         } else {
-            currentPageIndex + 1  // In L2R, the "next" page in reading order is at index + 1
+            currentPageIndex + 1
         }
         
         if (currentPageIndex == -1 || nextPageIndex < 0 || nextPageIndex >= viewer.adapter.items.size) {
@@ -277,7 +276,6 @@ class PagerPageHolder(
             return false
         }
         
-        // Wait for next page to be ready
         if (nextPage.status != Page.State.Ready) {
             try {
                 nextPage.statusFlow.first { it == Page.State.Ready || it is Page.State.Error }
@@ -289,7 +287,6 @@ class PagerPageHolder(
             }
         }
 
-        // Check if both pages are narrow (not wide)
         val currentStreamFn = page.stream ?: return false
         val nextStreamFn = nextPage.stream ?: return false
 

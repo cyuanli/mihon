@@ -170,6 +170,8 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
             val position = filteredItems.indexOf(view.item)
             if (position != -1) {
                 return position
+            } else {
+                logcat { "Position for ${view.item} not found" }
             }
         }
         return POSITION_NONE
