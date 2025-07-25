@@ -136,16 +136,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
 
         config.dualPageCombineChangedListener = { enabled ->
-            // Reload chapters to apply/remove dual-page combination
-            val chapters = adapter.currentChapter
-            if (chapters != null) {
-                val viewerChapters = ViewerChapters(
-                    currChapter = chapters,
-                    prevChapter = adapter.prevTransition?.from,
-                    nextChapter = adapter.nextTransition?.to
-                )
-                adapter.setChapters(viewerChapters, forceTransition = false)
-            }
+            adapter.resetDualPageState()
         }
 
         config.imagePropertyChangedListener = {
@@ -174,6 +165,11 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     override fun getView(): View {
         return pager
     }
+
+    /**
+     * Returns the currently active page (can be ReaderPage or ChapterTransition).
+     */
+    fun getCurrentPage(): Any? = currentPage
 
     /**
      * Returns the PagerPageHolder for the provided page

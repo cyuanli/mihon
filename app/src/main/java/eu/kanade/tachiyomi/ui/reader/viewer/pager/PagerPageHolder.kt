@@ -264,7 +264,15 @@ class PagerPageHolder(
         }
 
         val nextPage = viewer.adapter.items[nextPageIndex]
+        if (viewer.getCurrentPage() == nextPage) {
+            return false
+        }
+        
         if (nextPage !is ReaderPage || nextPage is InsertPage) {
+            return false
+        }
+
+        if (page.chapter.chapter.id != nextPage.chapter.chapter.id) {
             return false
         }
 

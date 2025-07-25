@@ -246,6 +246,14 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         return consumedPages.contains(page)
     }
 
+    /**
+     * Resets dual-page state when settings change.
+     */
+    fun resetDualPageState() {
+        consumedPages.clear()
+        notifyDataSetChanged()
+    }
+
     fun refresh() {
         readerThemedContext = viewer.activity.createReaderThemeContext()
     }
