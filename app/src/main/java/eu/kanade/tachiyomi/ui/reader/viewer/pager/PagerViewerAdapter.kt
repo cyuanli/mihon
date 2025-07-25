@@ -172,8 +172,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     override fun getItemPosition(view: Any): Int {
         if (view is PositionableView) {
-            val filteredItems = getFilteredItems()
-            val position = filteredItems.indexOf(view.item)
+            val position = getFilteredPosition(view.item)
             if (position != -1) {
                 return position
             } else {
