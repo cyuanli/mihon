@@ -33,6 +33,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     private val consumedPages = mutableSetOf<ReaderPage>()
 
+    /**
+     * Set of pages that have been viewed by the user and should not be consumed.
+     */
+    private val viewedPages = mutableSetOf<ReaderPage>()
+
     var nextTransition: ChapterTransition.Next? = null
         private set
 
@@ -131,6 +136,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         val isChapterChange = currentChapter?.chapter?.id != chapters.currChapter.chapter.id
         if (isChapterChange) {
             consumedPages.clear()
+            viewedPages.clear()
         }
         
         items = newItems
@@ -247,10 +253,25 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
+     * Marks a page as viewed by the user.
+     */
+    fun markPageAsViewed(page: ReaderPage) {
+        viewedPages.add(page)
+    }
+
+    /**
+     * Checks if a page has been viewed by the user.
+     */
+    fun isPageViewed(page: ReaderPage): Boolean {
+        return viewedPages.contains(page)
+    }
+
+    /**
      * Resets dual-page state when settings change.
      */
     fun resetDualPageState() {
         consumedPages.clear()
+        viewedPages.clear()
         notifyDataSetChanged()
     }
 

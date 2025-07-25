@@ -201,6 +201,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                 else -> true
             }
             currentPage = page
+            if (page is ReaderPage) {
+                adapter.markPageAsViewed(page)
+            }
             when (page) {
                 is ReaderPage -> onReaderPageSelected(page, allowPreload, forward)
                 is ChapterTransition -> onTransitionSelected(page)
