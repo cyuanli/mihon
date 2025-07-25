@@ -380,7 +380,7 @@
     <string name="pref_dual_page_split">Split wide pages</string>
     <string name="pref_dual_page_invert">Invert split page placement</string>
     <string name="pref_dual_page_invert_summary">If the placement of the split wide pages don\'t match reading direction</string>
-    <string name="pref_dual_page_combine">Combine pages for dual-page view (beta)</string>
+    <string name="pref_dual_page_combine">Combine pages for dual-page view (experimental)</string>
     <string name="pref_dual_page_combine_summary">Display two pages side-by-side</string>
     <string name="pref_dual_page_combine_show_cover">Show first page separately</string>
     <string name="pref_page_rotate">Rotate wide pages to fit</string>
