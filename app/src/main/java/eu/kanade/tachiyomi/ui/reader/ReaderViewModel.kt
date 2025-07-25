@@ -559,11 +559,8 @@ class ReaderViewModel @JvmOverloads constructor(
      * Gets the ending page number when pages are combined (e.g., 3 for pages 2-3).
      */
     private fun getCombinedPageNumber(page: ReaderPage): Int? {
-        val viewer = state.value.viewer ?: return null
-        val adapter = when (viewer) {
-            is eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer -> viewer.adapter
-            else -> return null
-        }
+        val viewer = state.value.viewer as? eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer ?: return null
+        val adapter = viewer.adapter
         
         val pages = page.chapter.pages ?: return null
         val nextPageIndex = page.index + 1
