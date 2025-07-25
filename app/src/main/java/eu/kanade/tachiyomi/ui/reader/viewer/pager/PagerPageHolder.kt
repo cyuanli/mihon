@@ -153,6 +153,7 @@ class PagerPageHolder(
         try {
             val (source, isAnimated, background) = withIOContext {
                 val source = if (viewer.config.combinedPages && canCombineWithNext()) {
+                    viewer.markPageAsCombined(page)
                     createCombinedPageSource()
                 } else {
                     streamFn().use { process(item, Buffer().readFrom(it)) }
@@ -269,7 +270,7 @@ class PagerPageHolder(
             return false
         }
 
-        if (viewer.isPageViewed(nextPage)) {
+        if (viewer.isPageCombined(nextPage)) {
             return false
         }
 

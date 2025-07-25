@@ -62,9 +62,9 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     private val hiddenPages = mutableSetOf<ReaderPage>()
 
     /**
-     * Set of pages that have been viewed by the user and should not be hidden.
+     * Set of pages that have been combined with the next page.
      */
-    private val viewedPages = mutableSetOf<ReaderPage>()
+    private val combinedPages = mutableSetOf<ReaderPage>()
 
     /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
@@ -207,9 +207,6 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
                 else -> true
             }
             currentPage = page
-            if (page is ReaderPage) {
-                markPageAsViewed(page)
-            }
             when (page) {
                 is ReaderPage -> onReaderPageSelected(page, allowPreload, forward)
                 is ChapterTransition -> onTransitionSelected(page)
@@ -484,12 +481,12 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     fun isPageHidden(page: ReaderPage): Boolean = hiddenPages.contains(page)
 
-    fun markPageAsViewed(page: ReaderPage) = viewedPages.add(page)
+    fun markPageAsCombined(page: ReaderPage) = combinedPages.add(page)
 
-    fun isPageViewed(page: ReaderPage): Boolean = viewedPages.contains(page)
+    fun isPageCombined(page: ReaderPage): Boolean = combinedPages.contains(page)
 
     internal fun clearPageState() {
         hiddenPages.clear()
-        viewedPages.clear()
+        combinedPages.clear()
     }
 }
