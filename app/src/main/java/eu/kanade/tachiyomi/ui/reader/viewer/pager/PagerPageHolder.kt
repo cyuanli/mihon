@@ -152,7 +152,7 @@ class PagerPageHolder(
 
         try {
             val (source, isAnimated, background) = withIOContext {
-                val source = if (viewer.config.dualPageCombine && canCombineWithNext()) {
+                val source = if (viewer.config.combinedPages && canCombineWithNext()) {
                     createCombinedPageSource()
                 } else {
                     streamFn().use { process(item, Buffer().readFrom(it)) }
@@ -277,7 +277,7 @@ class PagerPageHolder(
             return false
         }
 
-        if (viewer.config.dualPageCombineShowCover && page.index == 0) {
+        if (viewer.config.combinedPagesShowCover && page.index == 0) {
             return false
         }
 
@@ -325,12 +325,12 @@ class PagerPageHolder(
         }
 
         withUIContext {
-            viewer.adapter.markPageAsConsumed(nextPage)
+            viewer.adapter.markPageAsHidden(nextPage)
         }
 
         return when (viewer) {
-            is L2RPagerViewer -> ImageUtil.combinePagesForDualPage(currentBuffer, nextBuffer)
-            else -> ImageUtil.combinePagesForDualPage(nextBuffer, currentBuffer)
+            is L2RPagerViewer -> ImageUtil.combinePages(currentBuffer, nextBuffer)
+            else -> ImageUtil.combinePages(nextBuffer, currentBuffer)
         }
     }
 

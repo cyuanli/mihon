@@ -97,9 +97,9 @@ class ReaderPreferences(
 
     fun dualPageRotateToFitInvertWebtoon() = preferenceStore.getBoolean("pref_dual_page_rotate_invert_webtoon", false)
 
-    fun dualPageCombinePaged() = preferenceStore.getBoolean("pref_dual_page_combine", false)
+    fun combinedPagesPaged() = preferenceStore.getBoolean("pref_combined_pages", false)
 
-    fun dualPageCombineShowCoverPage() = preferenceStore.getBoolean("pref_dual_page_combine_show_cover", true)
+    fun combinedPagesShowCoverPage() = preferenceStore.getBoolean("pref_combined_pages_show_cover", true)
 
     // endregion
 

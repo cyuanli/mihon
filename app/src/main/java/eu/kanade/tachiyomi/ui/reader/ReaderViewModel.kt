@@ -569,7 +569,7 @@ class ReaderViewModel @JvmOverloads constructor(
         }
         
         val nextPage = pages[nextPageIndex]
-        if (adapter.isPageConsumed(nextPage)) {
+        if (adapter.isPageHidden(nextPage)) {
             return nextPage.index + 1
         }
         

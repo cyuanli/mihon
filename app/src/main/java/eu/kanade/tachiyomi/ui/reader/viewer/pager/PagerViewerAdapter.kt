@@ -29,12 +29,12 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     private var preprocessed: MutableMap<Int, InsertPage> = mutableMapOf()
 
     /**
-     * Set of pages that have been consumed in dual-page combinations.
+     * Set of pages that have been hidden in dual-page combinations.
      */
-    private val consumedPages = mutableSetOf<ReaderPage>()
+    private val hiddenPages = mutableSetOf<ReaderPage>()
 
     /**
-     * Set of pages that have been viewed by the user and should not be consumed.
+     * Set of pages that have been viewed by the user and should not be hidden.
      */
     private val viewedPages = mutableSetOf<ReaderPage>()
 
@@ -131,7 +131,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         
         val isChapterChange = currentChapter?.chapter?.id != chapters.currChapter.chapter.id
         if (isChapterChange) {
-            consumedPages.clear()
+            hiddenPages.clear()
             viewedPages.clear()
         }
         
@@ -145,7 +145,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Returns the amount of items of the adapter, excluding consumed pages.
+     * Returns the amount of items of the adapter, excluding hidden pages.
      */
     override fun getCount(): Int {
         return getFilteredItems().size
@@ -218,10 +218,10 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Returns a filtered list of items, excluding consumed pages.
+     * Returns a filtered list of items, excluding hidden pages.
      */
     fun getFilteredItems(): List<Any> {
-        return items.filterNot { it is ReaderPage && isPageConsumed(it) }
+        return items.filterNot { it is ReaderPage && isPageHidden(it) }
     }
 
     /**
@@ -232,19 +232,19 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Marks a page as consumed in dual-page combination.
+     * Marks a page as hidden in dual-page combination.
      * The page will be filtered out from display but kept in the items list.
      */
-    fun markPageAsConsumed(consumedPage: ReaderPage) {
-       consumedPages.add(consumedPage)
+    fun markPageAsHidden(hiddenPage: ReaderPage) {
+       hiddenPages.add(hiddenPage)
        notifyDataSetChanged()
     }
 
     /**
-     * Checks if a page has been consumed in dual-page combination.
+     * Checks if a page has been hidden in dual-page combination.
      */
-    fun isPageConsumed(page: ReaderPage): Boolean {
-        return consumedPages.contains(page)
+    fun isPageHidden(page: ReaderPage): Boolean {
+        return hiddenPages.contains(page)
     }
 
     /**
@@ -262,10 +262,10 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
     }
 
     /**
-     * Resets dual-page state when settings change.
+     * Resets combined pages state when settings change.
      */
-    fun resetDualPageState() {
-        consumedPages.clear()
+    fun resetCombinedPagesState() {
+        hiddenPages.clear()
         viewedPages.clear()
         notifyDataSetChanged()
     }

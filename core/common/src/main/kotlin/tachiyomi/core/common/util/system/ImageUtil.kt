@@ -209,9 +209,9 @@ object ImageUtil {
     }
 
     /**
-     * Combines two pages side-by-side for dual-page reading mode.
+     * Combines two pages for side-by-side view.
      */
-    fun combinePagesForDualPage(leftPageSource: BufferedSource, rightPageSource: BufferedSource): BufferedSource {
+    fun combinePages(leftPageSource: BufferedSource, rightPageSource: BufferedSource): BufferedSource {
         val leftBitmap = BitmapFactory.decodeStream(leftPageSource.inputStream())
         val rightBitmap = BitmapFactory.decodeStream(rightPageSource.inputStream())
         

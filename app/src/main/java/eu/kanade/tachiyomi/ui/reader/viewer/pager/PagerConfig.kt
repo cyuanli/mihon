@@ -33,7 +33,7 @@ class PagerConfig(
 
     var dualPageSplitChangedListener: ((Boolean) -> Unit)? = null
 
-    var dualPageCombineChangedListener: ((Boolean) -> Unit)? = null
+    var combinedPagesChangedListener: ((Boolean) -> Unit)? = null
 
     var imageScaleType = 1
         private set
@@ -109,21 +109,21 @@ class PagerConfig(
                 { imagePropertyChangedListener?.invoke() },
             )
 
-        readerPreferences.dualPageCombinePaged()
+        readerPreferences.combinedPagesPaged()
             .register(
-                { dualPageCombine = it },
+                { combinedPages = it },
                 {
                     imagePropertyChangedListener?.invoke()
-                    dualPageCombineChangedListener?.invoke(it)
+                    combinedPagesChangedListener?.invoke(it)
                 }
             )
 
-        readerPreferences.dualPageCombineShowCoverPage()
+        readerPreferences.combinedPagesShowCoverPage()
             .register(
-                { dualPageCombineShowCover = it },
+                { combinedPagesShowCover = it },
                 {
                     imagePropertyChangedListener?.invoke()
-                    dualPageCombineChangedListener?.invoke(dualPageCombine)
+                    combinedPagesChangedListener?.invoke(combinedPages)
                 }
             )
     }

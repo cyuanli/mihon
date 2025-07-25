@@ -135,8 +135,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             }
         }
 
-        config.dualPageCombineChangedListener = { enabled ->
-            adapter.resetDualPageState()
+        config.combinedPagesChangedListener = { enabled ->
+            adapter.resetCombinedPagesState()
         }
 
         config.imagePropertyChangedListener = {
