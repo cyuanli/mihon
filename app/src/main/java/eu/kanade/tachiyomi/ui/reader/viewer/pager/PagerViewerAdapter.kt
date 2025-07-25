@@ -28,16 +28,6 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     private var preprocessed: MutableMap<Int, InsertPage> = mutableMapOf()
 
-    /**
-     * Set of pages that have been hidden in dual-page combinations.
-     */
-    private val hiddenPages = mutableSetOf<ReaderPage>()
-
-    /**
-     * Set of pages that have been viewed by the user and should not be hidden.
-     */
-    private val viewedPages = mutableSetOf<ReaderPage>()
-
     var nextTransition: ChapterTransition.Next? = null
         private set
 
@@ -131,8 +121,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         
         val isChapterChange = currentChapter?.chapter?.id != chapters.currChapter.chapter.id
         if (isChapterChange) {
-            hiddenPages.clear()
-            viewedPages.clear()
+            viewer.clearPageState()
         }
         
         items = newItems
@@ -221,7 +210,7 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      * Returns a filtered list of items, excluding hidden pages.
      */
     fun getFilteredItems(): List<Any> {
-        return items.filterNot { it is ReaderPage && isPageHidden(it) }
+        return items.filterNot { it is ReaderPage && viewer.isPageHidden(it) }
     }
 
     /**
@@ -229,45 +218,6 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
      */
     fun getFilteredPosition(item: Any): Int {
         return getFilteredItems().indexOf(item)
-    }
-
-    /**
-     * Marks a page as hidden in dual-page combination.
-     * The page will be filtered out from display but kept in the items list.
-     */
-    fun markPageAsHidden(hiddenPage: ReaderPage) {
-       hiddenPages.add(hiddenPage)
-       notifyDataSetChanged()
-    }
-
-    /**
-     * Checks if a page has been hidden in dual-page combination.
-     */
-    fun isPageHidden(page: ReaderPage): Boolean {
-        return hiddenPages.contains(page)
-    }
-
-    /**
-     * Marks a page as viewed by the user.
-     */
-    fun markPageAsViewed(page: ReaderPage) {
-        viewedPages.add(page)
-    }
-
-    /**
-     * Checks if a page has been viewed by the user.
-     */
-    fun isPageViewed(page: ReaderPage): Boolean {
-        return viewedPages.contains(page)
-    }
-
-    /**
-     * Resets combined pages state when settings change.
-     */
-    fun resetCombinedPagesState() {
-        hiddenPages.clear()
-        viewedPages.clear()
-        notifyDataSetChanged()
     }
 
     fun refresh() {

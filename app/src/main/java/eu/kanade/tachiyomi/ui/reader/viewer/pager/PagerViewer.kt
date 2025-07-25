@@ -49,12 +49,22 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     /**
      * Adapter of the pager.
      */
-    val adapter = PagerViewerAdapter(this)
+    private val adapter = PagerViewerAdapter(this)
 
     /**
      * Currently active item. It can be a chapter page or a chapter transition.
      */
     private var currentPage: Any? = null
+
+    /**
+     * Set of pages that have been hidden in combined page combinations.
+     */
+    private val hiddenPages = mutableSetOf<ReaderPage>()
+
+    /**
+     * Set of pages that have been viewed by the user and should not be hidden.
+     */
+    private val viewedPages = mutableSetOf<ReaderPage>()
 
     /**
      * Viewer chapters to set when the pager enters idle mode. Otherwise, if the view was settling
@@ -136,7 +146,8 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
         }
 
         config.combinedPagesChangedListener = { enabled ->
-            adapter.resetCombinedPagesState()
+            clearPageState()
+            adapter.notifyDataSetChanged()
         }
 
         config.imagePropertyChangedListener = {
@@ -197,7 +208,7 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
             }
             currentPage = page
             if (page is ReaderPage) {
-                adapter.markPageAsViewed(page)
+                markPageAsViewed(page)
             }
             when (page) {
                 is ReaderPage -> onReaderPageSelected(page, allowPreload, forward)
@@ -458,5 +469,27 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
 
     private fun cleanupPageSplit() {
         adapter.cleanupPageSplit()
+    }
+
+    fun getItemIndex(item: Any): Int = adapter.items.indexOf(item)
+    
+    fun getItemAt(index: Int): Any? = adapter.items.getOrNull(index)
+    
+    fun getItemCount(): Int = adapter.items.size    
+
+    fun markPageAsHidden(page: ReaderPage) {
+        hiddenPages.add(page)
+        adapter.notifyDataSetChanged()
+    }
+
+    fun isPageHidden(page: ReaderPage): Boolean = hiddenPages.contains(page)
+
+    fun markPageAsViewed(page: ReaderPage) = viewedPages.add(page)
+
+    fun isPageViewed(page: ReaderPage): Boolean = viewedPages.contains(page)
+
+    internal fun clearPageState() {
+        hiddenPages.clear()
+        viewedPages.clear()
     }
 }

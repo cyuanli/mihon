@@ -251,7 +251,7 @@ class PagerPageHolder(
      * Check if current page can be combined with the next page for dual-page display.
      */
     private suspend fun canCombineWithNext(): Boolean {
-        val currentPageIndex = viewer.adapter.items.indexOf(page)
+        val currentPageIndex = viewer.getItemIndex(page)
         
         val nextPageIndex = if (viewer is R2LPagerViewer) {
             currentPageIndex - 1
@@ -259,17 +259,17 @@ class PagerPageHolder(
             currentPageIndex + 1
         }
         
-        if (currentPageIndex == -1 || nextPageIndex < 0 || nextPageIndex >= viewer.adapter.items.size) {
+        if (currentPageIndex == -1 || nextPageIndex < 0 || nextPageIndex >= viewer.getItemCount()) {
             return false
         }
 
-        val nextPage = viewer.adapter.items[nextPageIndex]
+        val nextPage = viewer.getItemAt(nextPageIndex)
         
         if (nextPage !is ReaderPage || nextPage is InsertPage) {
             return false
         }
 
-        if (viewer.adapter.isPageViewed(nextPage)) {
+        if (viewer.isPageViewed(nextPage)) {
             return false
         }
 
@@ -309,13 +309,13 @@ class PagerPageHolder(
      * Creates a combined image source from current page and next page.
      */
     private suspend fun createCombinedPageSource(): BufferedSource {
-        val currentPageIndex = viewer.adapter.items.indexOf(page)
+        val currentPageIndex = viewer.getItemIndex(page)
         val nextPageIndex = if (viewer is R2LPagerViewer) {
             currentPageIndex - 1
         } else {
             currentPageIndex + 1
         }
-        val nextPage = viewer.adapter.items[nextPageIndex] as ReaderPage
+        val nextPage = viewer.getItemAt(nextPageIndex) as ReaderPage
 
         val currentBuffer = page.stream!!().use { 
             process(page, Buffer().readFrom(it))
@@ -325,7 +325,7 @@ class PagerPageHolder(
         }
 
         withUIContext {
-            viewer.adapter.markPageAsHidden(nextPage)
+            viewer.markPageAsHidden(nextPage)
         }
 
         return when (viewer) {
