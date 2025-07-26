@@ -252,40 +252,24 @@ class PagerPageHolder(
      * Check if current page can be combined with the next page for dual-page display.
      */
     private suspend fun canCombineWithNext(): Boolean {
+        if (viewer.config.combinedPagesShowCover && page.index == 0) return false
+        if (page.status != Page.State.Ready) return false
+
         val currentPageIndex = viewer.getItemIndex(page)
-        
         val nextPageIndex = if (viewer is R2LPagerViewer) {
             currentPageIndex - 1
         } else {
             currentPageIndex + 1
         }
-        
+
         if (currentPageIndex == -1 || nextPageIndex < 0 || nextPageIndex >= viewer.getItemCount()) {
             return false
         }
 
         val nextPage = viewer.getItemAt(nextPageIndex)
-        
-        if (nextPage !is ReaderPage || nextPage is InsertPage) {
-            return false
-        }
-
-        if (viewer.isPageCombined(nextPage)) {
-            return false
-        }
-
-        if (page.chapter.chapter.id != nextPage.chapter.chapter.id) {
-            return false
-        }
-
-        if (viewer.config.combinedPagesShowCover && page.index == 0) {
-            return false
-        }
-
-        if (page.status != Page.State.Ready) {
-            return false
-        }
-        
+        if (nextPage !is ReaderPage || nextPage is InsertPage) return false
+        if (viewer.isPageCombined(nextPage)) return false
+        if (page.chapter.chapter.id != nextPage.chapter.chapter.id) return false
         if (nextPage.status != Page.State.Ready) {
             try {
                 nextPage.statusFlow.first { it == Page.State.Ready || it is Page.State.Error }
@@ -302,7 +286,7 @@ class PagerPageHolder(
 
         val currentIsWide = currentStreamFn().use { ImageUtil.isWideImage(Buffer().readFrom(it)) }
         val nextIsWide = nextStreamFn().use { ImageUtil.isWideImage(Buffer().readFrom(it)) }
-        
+
         return !currentIsWide && !nextIsWide
     }
 
@@ -318,10 +302,10 @@ class PagerPageHolder(
         }
         val nextPage = viewer.getItemAt(nextPageIndex) as ReaderPage
 
-        val currentBuffer = page.stream!!().use { 
+        val currentBuffer = page.stream!!().use {
             process(page, Buffer().readFrom(it))
         }
-        val nextBuffer = nextPage.stream!!().use { 
+        val nextBuffer = nextPage.stream!!().use {
             process(nextPage, Buffer().readFrom(it))
         }
 

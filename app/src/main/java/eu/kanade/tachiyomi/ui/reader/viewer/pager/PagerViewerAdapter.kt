@@ -118,12 +118,11 @@ class PagerViewerAdapter(private val viewer: PagerViewer) : ViewPagerAdapter() {
         }
 
         preprocessed = mutableMapOf()
-        
-        val isChapterChange = currentChapter?.chapter?.id != chapters.currChapter.chapter.id
-        if (isChapterChange) {
+
+        if (currentChapter?.chapter?.id != chapters.currChapter.chapter.id) {
             viewer.clearPageState()
         }
-        
+
         items = newItems
         notifyDataSetChanged()
 

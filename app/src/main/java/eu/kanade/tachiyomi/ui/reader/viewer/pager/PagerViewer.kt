@@ -469,10 +469,10 @@ abstract class PagerViewer(val activity: ReaderActivity) : Viewer {
     }
 
     fun getItemIndex(item: Any): Int = adapter.items.indexOf(item)
-    
+
     fun getItemAt(index: Int): Any? = adapter.items.getOrNull(index)
-    
-    fun getItemCount(): Int = adapter.items.size    
+
+    fun getItemCount(): Int = adapter.items.size
 
     fun markPageAsHidden(page: ReaderPage) {
         hiddenPages.add(page)

@@ -115,7 +115,7 @@ class PagerConfig(
                 {
                     imagePropertyChangedListener?.invoke()
                     combinedPagesChangedListener?.invoke(it)
-                }
+                },
             )
 
         readerPreferences.combinedPagesShowCoverPage()
@@ -124,7 +124,7 @@ class PagerConfig(
                 {
                     imagePropertyChangedListener?.invoke()
                     combinedPagesChangedListener?.invoke(combinedPages)
-                }
+                },
             )
     }
 

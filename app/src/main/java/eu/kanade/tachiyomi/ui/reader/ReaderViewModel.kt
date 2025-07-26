@@ -560,18 +560,18 @@ class ReaderViewModel @JvmOverloads constructor(
      */
     private fun getCombinedPageNumber(page: ReaderPage): Int? {
         val viewer = state.value.viewer as? eu.kanade.tachiyomi.ui.reader.viewer.pager.PagerViewer ?: return null
-        
+
         val pages = page.chapter.pages ?: return null
         val nextPageIndex = page.index + 1
         if (nextPageIndex >= pages.size) {
             return null
         }
-        
+
         val nextPage = pages[nextPageIndex]
         if (viewer.isPageHidden(nextPage)) {
             return nextPage.index + 1
         }
-        
+
         return null
     }
 
